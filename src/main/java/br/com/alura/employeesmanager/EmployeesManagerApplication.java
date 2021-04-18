@@ -1,7 +1,10 @@
 package br.com.alura.employeesmanager;
 
 import br.com.alura.employeesmanager.model.Position;
+import br.com.alura.employeesmanager.repository.EmployeeRepository;
 import br.com.alura.employeesmanager.repository.PositionRepository;
+import br.com.alura.employeesmanager.service.BranchService;
+import br.com.alura.employeesmanager.service.EmployeeService;
 import br.com.alura.employeesmanager.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,10 +16,14 @@ import java.util.Scanner;
 @SpringBootApplication
 public class EmployeesManagerApplication implements CommandLineRunner {
 
-    PositionService positionService;
+    final private PositionService positionService;
+    final private BranchService branchService;
+    final private EmployeeService employeeService;
 
-    public EmployeesManagerApplication(PositionService positionService) {
+    public EmployeesManagerApplication(PositionService positionService, BranchService branchService, EmployeeService employeeService) {
         this.positionService = positionService;
+        this.branchService = branchService;
+        this.employeeService = employeeService;
     }
 
     public static void main(String[] args) {
@@ -33,6 +40,8 @@ public class EmployeesManagerApplication implements CommandLineRunner {
 
             System.out.println("\n--- Employees Manager ---");
             System.out.println("--- 1 Positions");
+            System.out.println("--- 2 Branches");
+            System.out.println("--- 3 Employees");
             System.out.println("--- 0 Exit");
             System.out.println("\n--- Option: ");
 
@@ -41,6 +50,12 @@ public class EmployeesManagerApplication implements CommandLineRunner {
             switch (option) {
                 case 1:
                     positionService.showOptions(scanner);
+                    break;
+                case 2:
+                    branchService.showOptions(scanner);
+                    break;
+                case 3:
+                    employeeService.showOptions(scanner);
                     break;
                 case 0:
                     break;

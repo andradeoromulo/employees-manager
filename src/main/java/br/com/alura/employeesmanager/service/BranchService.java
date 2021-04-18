@@ -1,19 +1,19 @@
 package br.com.alura.employeesmanager.service;
 
-import br.com.alura.employeesmanager.model.Position;
-import br.com.alura.employeesmanager.repository.PositionRepository;
+import br.com.alura.employeesmanager.model.Branch;
+import br.com.alura.employeesmanager.repository.BranchRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Scanner;
 
 @Service
-public class PositionService {
+public class BranchService {
 
-    private final PositionRepository repository;
+    private final BranchRepository repository;
 
-    public PositionService(PositionRepository positionRepository) {
-        this.repository = positionRepository;
+    public BranchService(BranchRepository branchRepository) {
+        this.repository = branchRepository;
     }
 
     public void showOptions(Scanner scanner) {
@@ -21,7 +21,7 @@ public class PositionService {
 
         while(option != 0) {
 
-            System.out.println("\n--- Positions ---");
+            System.out.println("\n--- Branches ---");
             System.out.println("--- 1 Create");
             System.out.println("--- 2 Update");
             System.out.println("--- 3 Read All");
@@ -54,58 +54,63 @@ public class PositionService {
     }
 
     private void save(Scanner scanner) {
-        System.out.println("--- Inserting new Position ---");
+        System.out.println("--- Inserting new Branch ---");
         System.out.println("--- Description: ");
         scanner.nextLine();
         String description = scanner.nextLine();
+        System.out.println("--- Address: ");
+        String address = scanner.nextLine();
 
-        Position position = new Position(description);
-        repository.save(position);
+        Branch branch = new Branch(description, address);
+        repository.save(branch);
 
         System.out.println("--- Position successfully created ---");
     }
 
     private void update(Scanner scanner) {
-        System.out.println("--- Updating Position ---");
+        System.out.println("--- Updating Branch ---");
         System.out.println("--- Id: ");
         int id = scanner.nextInt();
         System.out.println("--- Description: ");
         scanner.nextLine();
         String description = scanner.nextLine();
+        System.out.println("--- Address: ");
+        String address = scanner.nextLine();
 
-        Optional<Position> optional = repository.findById(id);
+        Optional<Branch> optional = repository.findById(id);
 
         if (optional.isPresent()) {
-            Position position = optional.get();
-            position.setDescription(description);
-            repository.save(position);
-            System.out.println("--- Position successfully updated ---");
+            Branch branch = optional.get();
+            branch.setDescription(description);
+            branch.setAddress(address);
+            repository.save(branch);
+            System.out.println("--- Branch successfully updated ---");
         } else {
-            optional.orElseThrow(() -> new RuntimeException("Position " + id + " not found"));
+            optional.orElseThrow(() -> new RuntimeException("Branch " + id + " not found"));
         }
     }
 
     private void readAll() {
-        System.out.println("--- Positions ---");
+        System.out.println("--- Branches ---");
 
-        Iterable<Position> positions = repository.findAll();
-        positions.forEach(position -> System.out.println(position));
+        Iterable<Branch> branches = repository.findAll();
+        branches.forEach(branch -> System.out.println(branch));
 
         System.out.println("-----------------");
     }
 
     private void delete(Scanner scanner) {
-        System.out.println("--- Deleting Position ---");
+        System.out.println("--- Deleting Branch ---");
         System.out.println("--- Id: ");
         int id = scanner.nextInt();
 
-        Optional<Position> optional = repository.findById(id);
+        Optional<Branch> branch = repository.findById(id);
 
-        if (optional.isPresent()) {
+        if (branch.isPresent()) {
             repository.deleteById(id);
-            System.out.println("--- Position successfully deleted ---");
+            System.out.println("--- Branch successfully deleted ---");
         } else {
-            optional.orElseThrow(() -> new RuntimeException("Position " + id + " not found"));
+            branch.orElseThrow(() -> new RuntimeException("Branch " + id + " not found"));
         }
     }
 
