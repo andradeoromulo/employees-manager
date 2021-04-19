@@ -6,6 +6,7 @@ import br.com.alura.employeesmanager.repository.PositionRepository;
 import br.com.alura.employeesmanager.service.BranchService;
 import br.com.alura.employeesmanager.service.EmployeeService;
 import br.com.alura.employeesmanager.service.PositionService;
+import br.com.alura.employeesmanager.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,11 +20,13 @@ public class EmployeesManagerApplication implements CommandLineRunner {
     final private PositionService positionService;
     final private BranchService branchService;
     final private EmployeeService employeeService;
+    final private ReportService reportService;
 
-    public EmployeesManagerApplication(PositionService positionService, BranchService branchService, EmployeeService employeeService) {
+    public EmployeesManagerApplication(PositionService positionService, BranchService branchService, EmployeeService employeeService, ReportService reportService) {
         this.positionService = positionService;
         this.branchService = branchService;
         this.employeeService = employeeService;
+        this.reportService = reportService;
     }
 
     public static void main(String[] args) {
@@ -42,6 +45,7 @@ public class EmployeesManagerApplication implements CommandLineRunner {
             System.out.println("--- 1 Positions");
             System.out.println("--- 2 Branches");
             System.out.println("--- 3 Employees");
+            System.out.println("--- 4 Reports");
             System.out.println("--- 0 Exit");
             System.out.println("\n--- Option: ");
 
@@ -56,6 +60,9 @@ public class EmployeesManagerApplication implements CommandLineRunner {
                     break;
                 case 3:
                     employeeService.showOptions(scanner);
+                    break;
+                case 4:
+                    reportService.showOptions(scanner);
                     break;
                 case 0:
                     break;

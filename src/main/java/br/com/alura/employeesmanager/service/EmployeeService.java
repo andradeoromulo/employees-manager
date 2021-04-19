@@ -6,7 +6,9 @@ import br.com.alura.employeesmanager.model.Position;
 import br.com.alura.employeesmanager.repository.BranchRepository;
 import br.com.alura.employeesmanager.repository.EmployeeRepository;
 import br.com.alura.employeesmanager.repository.PositionRepository;
-import org.apache.tomcat.jni.Local;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -55,7 +57,7 @@ public class EmployeeService {
                     update(scanner);
                     break;
                 case 3:
-                    readAll();
+                    readAll(scanner);
                     break;
                 case 4:
                     delete(scanner);
@@ -143,10 +145,16 @@ public class EmployeeService {
         System.out.println("--- Employee successfully updated ---");
     }
 
-    private void readAll() {
+    private void readAll(Scanner scanner) {
         System.out.println("--- Employees ---");
+        System.out.println("--- Page: ");
+        int page = scanner.nextInt();
 
-        Iterable<Employee> employees = employeeRepository.findAll();
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.ASC, "name"));
+        Iterable<Employee> employees = employeeRepository.findAll(pageable);
+
+        System.out.println("-----------------");
+        System.out.println(employees);
         employees.forEach(employee -> System.out.println(employee));
 
         System.out.println("-----------------");
