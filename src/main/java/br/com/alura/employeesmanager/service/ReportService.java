@@ -1,7 +1,10 @@
 package br.com.alura.employeesmanager.service;
 
 import br.com.alura.employeesmanager.model.Employee;
+import br.com.alura.employeesmanager.model.EmployeeProjection;
 import br.com.alura.employeesmanager.repository.EmployeeRepository;
+import br.com.alura.employeesmanager.specification.EmployeeSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +33,8 @@ public class ReportService {
             System.out.println("--- 1 Find employee by name");
             System.out.println("--- 2 Find employee by name, salary (gt) and hiring date");
             System.out.println("--- 3 Find employee by hiring date (gt)");
+            System.out.println("--- 4 Find employees' salaries");
+            System.out.println("--- 5 Find employees dynamically");
             System.out.println("--- 0 Back");
             System.out.println("\n--- Option: ");
 
@@ -44,6 +49,12 @@ public class ReportService {
                     break;
                 case 3:
                     findByHiringDateGreater(scanner);
+                    break;
+                case 4:
+                    findEmployeeSalary();
+                    break;
+                case 5:
+                    findEmployeesDynamically(scanner);
                     break;
                 case 0:
                     break;
@@ -94,6 +105,51 @@ public class ReportService {
         LocalDate hiringDate = LocalDate.parse(hiringDateInput, formatter);
 
         List<Employee> employees = employeeRepository.findByHiringDateGreater(hiringDate);
+        employees.forEach(System.out::println);
+
+        System.out.println("-----------------");
+    }
+
+    private void findEmployeeSalary() {
+        System.out.println("--- Employees' salaries ---");
+
+        List<EmployeeProjection> employees = employeeRepository.findEmployeeSalary();
+        employees.forEach(e -> {
+            System.out.println("[" + e.getId() + "]" + " " + e.getName() + ", $" + e.getSalary() );
+        });
+
+        System.out.println("-----------------");
+    }
+
+    private void findEmployeesDynamically(Scanner scanner) {
+        System.out.println("--- Find employees dynamically (all parameters are optional) ---");
+        System.out.println("--- Name: ");
+        scanner.nextLine();
+        String name = scanner.nextLine();
+        if(name.equalsIgnoreCase("NULL"))
+            name = null;
+
+        System.out.println("--- Salary (gt): ");
+        String salaryInput = scanner.nextLine();
+        BigDecimal salary;
+        if(salaryInput.equalsIgnoreCase("NULL"))
+            salary = null;
+        else
+            salary = new BigDecimal(salaryInput);
+
+        System.out.println("--- Hiring Date (gt): ");
+        String hiringDateInput = scanner.nextLine();
+        LocalDate hiringDate;
+        if(hiringDateInput.equalsIgnoreCase("NULL"))
+            hiringDate = null;
+        else
+            hiringDate = LocalDate.parse(hiringDateInput, formatter);
+
+        List<Employee> employees = employeeRepository.findAll(Specification.where(
+                EmployeeSpecification.name(name))
+                .and(EmployeeSpecification.salary(salary))
+                .and(EmployeeSpecification.hiringDate(hiringDate))
+        );
         employees.forEach(System.out::println);
 
         System.out.println("-----------------");
